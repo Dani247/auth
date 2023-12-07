@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import cors from 'cors'
 import { getUserByUsername, insertUser } from './db/user';
-import { generateAccessToken, generateRefreshToken } from './jwt';
+import { generateAccessToken, generateRefreshToken, validateToken } from './jwt';
 
 const app = express();
 app.use(express.json());
@@ -54,6 +54,17 @@ app.post('/register', async (req: Request, res: Response) => {
         res.status(500).send('Error registering the user');
     }
 });
+
+app.get('/validate/:token', (req: Request, res: Response) => {
+    const token = req.params.token;
+
+    try {
+        const isValid = validateToken(token);
+        return res.send(isValid);
+    } catch (error) {
+        res.status(401).send('Invalid Token');
+    }
+})
 
 
 const PORT = process.env.PORT;
