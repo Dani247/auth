@@ -2,11 +2,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import cors from 'cors'
 import { getUserByUsername, insertUser } from './db/user';
 import { generateAccessToken, generateRefreshToken } from './jwt';
 
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 app.post('/login', async (req: Request, res: Response) => {
     const { username, password } = req.body;
